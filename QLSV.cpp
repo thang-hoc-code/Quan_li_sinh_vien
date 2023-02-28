@@ -164,7 +164,7 @@ void Bang_sinh_vien(struct Sinh_vien SV)
 	printf("\n");
     printf("| Thong tin sinh vien    \n");
     printf("| %-10s : %-10s \n", "Ten",SV.ten);
-    printf("| %-10s : %-10lld \n", "ID", SV.id);
+    printf("| %-10s : %-10s \n", "ID", SV.id);
     printf("| %-10s : %-10s \n", "Lop", SV.lop);
     printf("| %-10s : %-10s \n", "Gioi tinh", SV.gioitinh);
     printf("| %-10s : %02d/%02d/%-6d \n", "Ngay sinh", SV.ngaysinh.ngay, SV.ngaysinh.thang, SV.ngaysinh.nam);
@@ -181,7 +181,7 @@ void Tim_sinh_vien(struct Sinh_vien ds[], int n)
 {
     char id[50];
     printf("\nNhap ID sinh vien can tim: ");
-    scanf("%lld", &id);
+    scanf("%s", &id);
     bool found = false;
     for (int i = 0; i < n; i++) {
         if (strcmp(ds[i].id,id)) {
@@ -228,7 +228,7 @@ void Xoa_sinh_vien(struct Sinh_vien ds[], int &n)
 {
     char id[50];
     printf("\nNhap ID sinh vien can xoa: ");
-    scanf("%lld", &id);
+    scanf("%s", &id);
     bool found = false;
     for (int i = 0; i < n; i++) 
     {
@@ -271,15 +271,6 @@ void Them_sinh_vien(struct Sinh_vien ds[], int &n)
 	printf("\nDa them sinh vien thanh cong %d sinh vien!\n",them);
 }
 
-//Ham in ra tat ca sinh vien
-void In_sinh_vien(struct Sinh_vien ds[], int n)
-{
-	for (int i=0;i<n;i++)
-	{
-		Bang_sinh_vien(ds[i]);
-	}
-}
-
 //Ham sap xep theo ten
 void Sap_xep_ten(struct Sinh_vien ds[],int n)
 {
@@ -287,7 +278,7 @@ void Sap_xep_ten(struct Sinh_vien ds[],int n)
 	{
 		for (int j=i+1;j<n;j++)
 		{
-			if (strcmp(ds[j].ten,ds[j+1].ten)>0)
+			if (strcmp(ds[i].ten,ds[j].ten)>0)
 			{
 				struct Sinh_vien temp;
 				temp = ds[i];
@@ -296,7 +287,6 @@ void Sap_xep_ten(struct Sinh_vien ds[],int n)
 			}
 		}
 	}
-	In_sinh_vien(ds,n);
 }
 
 //Ham sap xep theo diem trung binh
@@ -306,7 +296,7 @@ void Sap_xep_diemtb(struct Sinh_vien ds[],int n)
 	{
 		for (int j=i+1;j<n;j++)
 		{
-			if (ds[j].diemtb<ds[j+1].diemtb)
+			if (ds[i].diemtb<ds[j].diemtb)
 			{
 				struct Sinh_vien temp;
 				temp = ds[i];
@@ -315,7 +305,15 @@ void Sap_xep_diemtb(struct Sinh_vien ds[],int n)
 			}
 		}
 	}
-	In_sinh_vien(ds,n); 
+}
+
+//Ham in ra tat ca sinh vien
+void In_sinh_vien(struct Sinh_vien ds[], int n)
+{
+	for (int i=0;i<n;i++)
+	{
+		Bang_sinh_vien(ds[i]);
+	}
 }
 int main ()
 {
@@ -328,12 +326,11 @@ int main ()
         printf("********************************************\n");
         printf("**     CHUONG TRINH QUAN LY SINH VIEN     **\n");
         printf("**       1. Nhap du lieu                  **\n");
-        printf("**       2. In danh sach sinh vien        **\n");
-        printf("**       3. Sinh vien co DTB cao nhat     **\n");
-        printf("**       4. Xoa du lieu sinh vien         **\n");
-        printf("**       5. Tim du lieu sinh vien         **\n");
-        printf("**       6. In sinh vien SX theo ten 	  **\n");
-        printf("**       7. In sinh vien SX theo DTB 	  **\n");
+        printf("**       2. Sinh vien co DTB cao nhat     **\n");
+        printf("**       3. Xoa du lieu sinh vien         **\n");
+        printf("**       4. Tim du lieu sinh vien         **\n");
+        printf("**       5. In sinh vien SX theo ten 	  **\n");
+        printf("**       6. In sinh vien SX theo DTB 	  **\n");
         printf("**       0. Thoat                         **\n");
         printf("********************************************\n");
         printf("       Nhap lua chon cua ban: ");
@@ -345,14 +342,6 @@ int main ()
 				Them_sinh_vien(ds,n);
             	break;
         	case 2:
-        		printf("\nBan da chon chuc nang in du lieu sinh vien!\n");
-        		if (n==0)
-        		{
-        			printf ("\nChua co thong tin sinh vien!\n");
-				}
-        	    In_sinh_vien(ds,n);
-        		break;
-        	case 3:
         		printf("\nBan da chon chuc nang in du lieu sinh vien co DTB cao nhat!\n");
         		if (n==0)
         		{
@@ -363,15 +352,15 @@ int main ()
 					Sinh_vien_diemtb_max(ds,n);
 				}
         		break;
-        	case 4:
+        	case 3:
         		printf("\nBan da chon chuc nang xoa du lieu sinh vien!\n");
         		Xoa_sinh_vien(ds,n);
         		break;
-        	case 5:
+        	case 4:
         		printf("\nBan da chon chuc nang tim du lieu sinh vien!\n");
         		Tim_sinh_vien(ds,n);
         		break;
-        	case 6:
+        	case 5:
         		printf("\nBan da chon chuc nang in du lieu sinh vien theo ten!\n");
         		if (n==0)
         		{
@@ -380,9 +369,10 @@ int main ()
 				else 
 				{
 					Sap_xep_ten(ds,n);
+					In_sinh_vien(ds,n);
 				}
         		break;
-        	case 7:
+        	case 6:
         		printf("\nBan da chon chuc nang in du lieu sinh vien theo DTB!\n");
         		if (n==0)
         		{
@@ -391,6 +381,7 @@ int main ()
 				else 
 				{
 					Sap_xep_diemtb(ds,n);
+					In_sinh_vien(ds,n); 
 				}
         		
         		break;

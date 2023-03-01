@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include <ctype.h>
-
+#include <conio.h>
 //Khai bao bien
 struct Diem_thi
 {
@@ -191,7 +191,7 @@ void Tim_sinh_vien(struct Sinh_vien ds[], int n)
         }
     }
     if (!found) {
-        printf("Khong tim thay sinh vien co ID %lld\n", id);
+        printf("Khong tim thay sinh vien co ID %s\n", id);
     }
 }
 
@@ -245,7 +245,7 @@ void Xoa_sinh_vien(struct Sinh_vien ds[], int &n)
     }
     if (!found)
     {
-        printf("Khong tim thay sinh vien co ID %lld\n", id);
+        printf("Khong tim thay sinh vien co ID %s\n", id);
     }
 }
 
@@ -308,13 +308,71 @@ void Sap_xep_diemtb(struct Sinh_vien ds[],int n)
 }
 
 //Ham in ra tat ca sinh vien
-void In_sinh_vien(struct Sinh_vien ds[], int n)
+void In_sinh_vien(struct Sinh_vien ds[], int &n)
 {
 	for (int i=0;i<n;i++)
 	{
 		Bang_sinh_vien(ds[i]);
 	}
 }
+
+//Nhap phim bat ki
+void Nhap_phim()
+{
+	printf ("\nNhap phim bat ki de tiep tuc!\n");
+	getch();
+	fflush(stdin);
+}
+
+// Lam viec voi file
+void Xuat_vao_file(struct Sinh_vien ds[], int n)
+{
+    char tenfile[50];
+    printf ("\nNhap duong dan cua file: ");
+    gets(tenfile);
+    
+    FILE *f;
+    f = fopen(tenfile,"wb");
+    if (f == NULL)
+    {
+        printf("\nKhong the mo file!");
+    }
+
+    // Ghi s? lu?ng sinh viên vào file
+    fwrite(&n, sizeof(int), 1, f);
+
+    // Ghi t?ng sinh viên vào file
+    for (int i = 0; i < n; i++)
+    {
+        fwrite(&ds[i], sizeof(struct Sinh_vien), 1, f);
+    }
+
+    fclose(f);
+}
+
+void Nhap_tu_file(struct Sinh_vien ds[], int &n)
+{
+    char tenfile[50];
+    printf ("\nNhap duong dan cua file: ");
+    gets(tenfile);
+    
+    FILE *f;
+    f = fopen(tenfile,"rb");
+    if (f == NULL)
+    {
+        printf("\nKhong the mo file!");
+    }
+
+    fread(&n, sizeof(int), 1, f);
+
+    for (int i = 0; i < n; i++)
+    {
+        fread(&ds[i], sizeof(struct Sinh_vien), 1, f);
+    }
+
+    fclose(f);
+}
+
 int main ()
 {
 	struct Sinh_vien ds[100];
@@ -331,6 +389,8 @@ int main ()
         printf("**       4. Tim du lieu sinh vien         **\n");
         printf("**       5. In sinh vien SX theo ten 	  **\n");
         printf("**       6. In sinh vien SX theo DTB 	  **\n");
+        printf("**       7. Xuat sinh vien vao file 	  **\n");
+        printf("**       8. Nhap sinh vien tu file   	  **\n");
         printf("**       0. Thoat                         **\n");
         printf("********************************************\n");
         printf("       Nhap lua chon cua ban: ");
@@ -340,6 +400,7 @@ int main ()
         	case 1:
         		printf("\nBan da chon chuc nang nhap du lieu sinh vien!\n");
 				Them_sinh_vien(ds,n);
+				Nhap_phim();
             	break;
         	case 2:
         		printf("\nBan da chon chuc nang in du lieu sinh vien co DTB cao nhat!\n");
@@ -351,14 +412,17 @@ int main ()
 				{
 					Sinh_vien_diemtb_max(ds,n);
 				}
+				Nhap_phim();
         		break;
         	case 3:
         		printf("\nBan da chon chuc nang xoa du lieu sinh vien!\n");
         		Xoa_sinh_vien(ds,n);
+        		Nhap_phim();
         		break;
         	case 4:
         		printf("\nBan da chon chuc nang tim du lieu sinh vien!\n");
         		Tim_sinh_vien(ds,n);
+        		Nhap_phim();
         		break;
         	case 5:
         		printf("\nBan da chon chuc nang in du lieu sinh vien theo ten!\n");
@@ -371,6 +435,7 @@ int main ()
 					Sap_xep_ten(ds,n);
 					In_sinh_vien(ds,n);
 				}
+				Nhap_phim();
         		break;
         	case 6:
         		printf("\nBan da chon chuc nang in du lieu sinh vien theo DTB!\n");
@@ -383,7 +448,18 @@ int main ()
 					Sap_xep_diemtb(ds,n);
 					In_sinh_vien(ds,n); 
 				}
-        		
+        		Nhap_phim();
+        		break;
+        	case 7:
+        		fflush(stdin);
+        		Xuat_vao_file(ds,n);
+        		Nhap_phim();
+        		break;
+        	case 8:
+        		fflush(stdin);
+        		Nhap_tu_file(ds,n);
+        		In_sinh_vien(ds,n);
+        		Nhap_phim();
         		break;
         	case 0:
         		return 0;
